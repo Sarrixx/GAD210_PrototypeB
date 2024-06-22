@@ -61,8 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\ThirdPersonCameraController.cs" />
+    <Compile Include="Assets\Scripts\EventTrigger.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonPlayerController.cs" />
+    <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\NightVision.cs" />
+    <Compile Include="Assets\Scripts\HUD.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

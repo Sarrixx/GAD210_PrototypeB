@@ -9,17 +9,32 @@ public class NightVision : MonoBehaviour
     [SerializeField] private Color filterAColour = Color.green;
     [SerializeField] private Color filterBColour = Color.red;
     [SerializeField] private Color filterCColour = Color.grey;
+    [SerializeField] private float fogStart;
+    [SerializeField] private float fogEnd;
+    [SerializeField] private AudioClip activationClip;
+    [SerializeField] private AudioClip toggleClip;
+    [SerializeField] private HUD hud;
 
     private bool filterAActive = false;
     private bool filterBActive = false;
     private bool filterCActive = false;
+    private float defaultFogStart;
+    private float defaultFogEnd;
     private Color defaultAmbientColor;
     private PostProcessVolume postProcessVolume;
+    private AudioSource aSrc;
 
     private void Awake()
     {
         defaultAmbientColor = RenderSettings.ambientLight;
+        defaultFogStart = RenderSettings.fogStartDistance;
+        defaultFogEnd = RenderSettings.fogEndDistance;
         TryGetComponent(out postProcessVolume);
+        TryGetComponent(out aSrc);
+        if(aSrc != null)
+        {
+            aSrc.loop = false;
+        }
     }
 
     // Start is called before the first frame update
@@ -60,20 +75,49 @@ public class NightVision : MonoBehaviour
             case 0:
             default:
                 if(postProcessVolume != null) { postProcessVolume.weight = 0f; }
-                if (RenderSettings.ambientLight != defaultAmbientColor) { RenderSettings.ambientLight = defaultAmbientColor; };
+                if (RenderSettings.ambientLight != defaultAmbientColor) { RenderSettings.ambientLight = defaultAmbientColor; }
+                if(RenderSettings.fogStartDistance != defaultFogStart) { RenderSettings.fogStartDistance = defaultFogStart; }
+                if(RenderSettings.fogEndDistance != defaultFogEnd) { RenderSettings.fogEndDistance = defaultFogEnd; }
                 filterAActive = false;
                 filterBActive = false;
                 filterCActive = false;
+                if (aSrc.clip != null && aSrc.isPlaying == true)
+                {
+                    aSrc.Stop();
+                }
+                aSrc.PlayOneShot(activationClip);
+                if (hud != null)
+                {
+                    hud.ToggleNightVision(0);
+                }
                 break;
             case 1:
                 if (filterAActive == false && postProcessVolume != null && filterAProfile != null) 
                 {
                     postProcessVolume.profile = filterAProfile;
                     postProcessVolume.weight = 1f;
-                    if (RenderSettings.ambientLight != filterAColour) { RenderSettings.ambientLight = filterAColour; };
+                    if (RenderSettings.ambientLight != filterAColour) { RenderSettings.ambientLight = filterAColour; }
+                    if (RenderSettings.fogStartDistance != fogStart) { RenderSettings.fogStartDistance = fogStart; }
+                    if (RenderSettings.fogEndDistance != fogEnd) { RenderSettings.fogEndDistance = fogEnd; }
+                    if (filterBActive == true || filterCActive == true)
+                    {
+                        aSrc.PlayOneShot(toggleClip);
+                    }
+                    else
+                    {
+                        if (aSrc.clip != null)
+                        {
+                            aSrc.Play();
+                        }
+                        aSrc.PlayOneShot(activationClip);
+                    }
                     filterAActive = true;
                     filterBActive = false;
                     filterCActive = false;
+                    if (hud != null)
+                    {
+                        hud.ToggleNightVision(1);
+                    }
                 }
                 break;
             case 2:
@@ -81,10 +125,28 @@ public class NightVision : MonoBehaviour
                 {
                     postProcessVolume.profile = filterBProfile;
                     postProcessVolume.weight = 1f;
-                    if (RenderSettings.ambientLight != filterBColour) { RenderSettings.ambientLight = filterBColour; };
+                    if (RenderSettings.ambientLight != filterBColour) { RenderSettings.ambientLight = filterBColour; }
+                    if (RenderSettings.fogStartDistance != fogStart) { RenderSettings.fogStartDistance = fogStart; }
+                    if (RenderSettings.fogEndDistance != fogEnd) { RenderSettings.fogEndDistance = fogEnd; }
+                    if (filterAActive == true || filterCActive == true)
+                    {
+                        aSrc.PlayOneShot(toggleClip);
+                    }
+                    else
+                    {
+                        if (aSrc.clip != null)
+                        {
+                            aSrc.Play();
+                        }
+                        aSrc.PlayOneShot(activationClip);
+                    }
                     filterBActive = true;
                     filterAActive = false;
                     filterCActive = false;
+                    if (hud != null)
+                    {
+                        hud.ToggleNightVision(2);
+                    }
                 }
                 break;
             case 3:
@@ -92,10 +154,28 @@ public class NightVision : MonoBehaviour
                 {
                     postProcessVolume.profile = filterCProfile;
                     postProcessVolume.weight = 1f;
-                    if (RenderSettings.ambientLight != filterCColour) { RenderSettings.ambientLight = filterCColour; };
+                    if (RenderSettings.ambientLight != filterCColour) { RenderSettings.ambientLight = filterCColour; }
+                    if (RenderSettings.fogStartDistance != fogStart) { RenderSettings.fogStartDistance = fogStart; }
+                    if (RenderSettings.fogEndDistance != fogEnd) { RenderSettings.fogEndDistance = fogEnd; }
+                    if (filterBActive == true || filterAActive == true)
+                    {
+                        aSrc.PlayOneShot(toggleClip);
+                    }
+                    else
+                    {
+                        if (aSrc.clip != null)
+                        {
+                            aSrc.Play();
+                        }
+                        aSrc.PlayOneShot(activationClip);
+                    }
                     filterCActive = true;
                     filterAActive = false;
                     filterBActive = false;
+                    if (hud != null)
+                    {
+                        hud.ToggleNightVision(3);
+                    }
                 }
                 break;
         }
