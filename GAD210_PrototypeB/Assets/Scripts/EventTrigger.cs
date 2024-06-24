@@ -86,15 +86,16 @@ public class EventTrigger : MonoBehaviour
                         trigger.gameObject.SetActive(false);
                     }
                 }
-                hud.DisplaySectionOutcome(foundTargets, totalTargets);
-                if(nextSection != null && nextSection.targets.Length > 0)
+                bool loadNextSection = nextSection != null && nextSection.targets.Length > 0;
+                hud.DisplaySectionOutcome(foundTargets, totalTargets, 5, loadNextSection);
+                if (loadNextSection == true)
                 {
                     nextSection.gameObject.SetActive(true);
                     hud.UpdateFoundTargets(0, nextSection.totalTargets);
                 }
                 else
                 {
-                    //game end
+                    GameManager.Instance.GameEnd(5);
                 }
                 gameObject.SetActive(false);
             }

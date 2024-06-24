@@ -110,18 +110,15 @@ public class ThirdPersonCameraController : MonoBehaviour
             if (fadedObject != null && hitInfo.transform.gameObject != fadedObject)
             {
                 StartCoroutine(FadeObject(fadedObject));
-                Debug.Log("Fading current object in");
             }
             else if (fadedObject != hitInfo.transform.gameObject)
             {
                 StartCoroutine(FadeObject(hitInfo.transform.gameObject));
-                Debug.Log("Fading object out");
             }
         }
         else if (fadedObject != null)
         {
             StartCoroutine(FadeObject(fadedObject));
-            Debug.Log("Fading current object in");
         }
     }
 

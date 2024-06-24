@@ -65,13 +65,16 @@ public class HUD : MonoBehaviour
         }
     }
 
-    private IEnumerator DisplayOutcomeForTime(float time)
+    private IEnumerator DisplayOutcomeForTime(float time, bool restoreTargetText)
     {
         targetsText.gameObject.SetActive(false);
         endGameText.gameObject.SetActive(true);
         yield return new WaitForSeconds(time);
-        targetsText.gameObject.SetActive(true);
-        endGameText.gameObject.SetActive(false);
+        if (restoreTargetText == true)
+        {
+            targetsText.gameObject.SetActive(true);
+            endGameText.gameObject.SetActive(false);
+        }
     }
 
     public void UpdateFoundTargets(int foundTargets, int totalTargets)
@@ -79,14 +82,14 @@ public class HUD : MonoBehaviour
         targetsText.text = $"Found targets: {foundTargets}/{totalTargets}";
     }
 
-    public void DisplaySectionOutcome(int foundTargets, int totalTargets)
+    public void DisplaySectionOutcome(int foundTargets, int totalTargets, float time, bool restoreTargetText = true)
     {
         endGameText.text = $"Found targets: {foundTargets} of {totalTargets} ({(float)foundTargets / totalTargets * 100f}%)";
         if (sectionTextRoutine != null)
         {
             StopCoroutine(sectionTextRoutine);
         }
-        sectionTextRoutine = StartCoroutine(DisplayOutcomeForTime(5));
+        sectionTextRoutine = StartCoroutine(DisplayOutcomeForTime(time, restoreTargetText));
     }
 
     public void ToggleInteractionAlert(bool enabled)
